@@ -1,19 +1,38 @@
 
 
+import { useContext } from "react";
 import { useLoaderData } from "react-router-dom";
+import { AuthContext } from "../../providers/AuthProvider";
 
 const Checkout = () => {
+    const {user} = useContext(AuthContext)
     const service = useLoaderData()
-    const {price, service_id, title, _id} = service;
+    const {price, service_id, title, _id,} = service;
+
     
     const handleCheckOut = e => {
       e.preventDefault()
       const form = e.target;
       const name = form.name.value;
       const date = form.date.value;
-      const email = form.email.value;
-      const price = form.price.value;
-      console.log(name, date, email, price)
+      const email = user?.email;
+      const order = {
+        customerName : name,
+        email,
+        service : title,
+        date,
+        service_id : _id,
+        price
+      }
+      fetch(`http://localhost:5000/checkout`, {
+        method : "POST",
+        headers : {
+          'content-type' : 'application/json'
+        },
+        body : JSON.stringify(order)
+      })
+      .then(res => res.json())
+      .then(data => console.log(data))
     }
     return (
         <div className=" bg-base-200 mx-auto pt-8">
@@ -26,7 +45,7 @@ const Checkout = () => {
           <label className="label">
             <span className="label-text">Name</span>
           </label>
-          <input type="text" name="name" defaultValue={title} placeholder="email" className="input input-bordered" />
+          <input type="text" name="name" defaultValue={title} className="input input-bordered" />
         </div>
         <div className="form-control">
           <label className="label">
@@ -38,7 +57,7 @@ const Checkout = () => {
           <label className="label">
             <span className="label-text">Email</span>
           </label>
-          <input type="email" name="email"  className="input input-bordered" />
+          <input type="email" name="email" defaultValue={user?.email}  className="input input-bordered" />
         </div>
         <div className="form-control">
           <label className="label">

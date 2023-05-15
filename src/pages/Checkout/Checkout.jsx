@@ -32,7 +32,12 @@ const Checkout = () => {
         body : JSON.stringify(order)
       })
       .then(res => res.json())
-      .then(data => console.log(data))
+      .then(data => {
+        if(data?.insertedId){
+          alert('bookmark added')
+          console.log(data)
+        } 
+      })
     }
     return (
         <div className=" bg-base-200 mx-auto pt-8">

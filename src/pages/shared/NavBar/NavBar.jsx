@@ -12,7 +12,12 @@ const NavBar = () => {
     const navItem = <>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/about">About</Link></li>
-        { user?.email ? <li><Link onClick={handleLogout}>Logout</Link></li> : 
+        { user?.email ? 
+        <>
+        <li><Link to="/bookings">My bookings</Link></li>
+        <li><Link onClick={handleLogout}>Logout</Link></li>
+        </>
+        : 
         <li><Link to="/login">Login</Link></li>
         }
     </>

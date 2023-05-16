@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, json, useLocation, useNavigate } from 'react-router-dom';
 import img from '../../assets/images/login/login.svg'
 import { useContext } from 'react';
 import { AuthContext } from '../../providers/AuthProvider';
@@ -18,7 +18,23 @@ const Login = () => {
         signInUser(email,password)
         .then(result => {
             const user = result.user;
-            console.log('login user is ', user)
+            const loggedUser = {
+              email : user.email,
+            }
+            fetch('http://localhost:5000/jwt', {
+            method : "POST",
+            headers : {
+              'content-type' : 'application/json'
+            },
+            body : JSON.stringify(loggedUser)
+          })
+          .then(res => res.json())
+          .then(data => {
+            console.log(data)
+            // warning : local storage 
+            localStorage.setItem('car-access-token', data.token)
+          })
+            console.log(loggedUser)
             navigate(from, {replace : true})
 
         })
